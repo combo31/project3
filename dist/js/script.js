@@ -110,4 +110,51 @@
 
         setClock('.timer', deadline);
 
+      // Модальное окно / Modal window
+
+      const modalTrigger = document.querySelectorAll('[data-modal'), // кнопки указываем в скобках так как это атрибут
+            modal = document.querySelector('.modal'), // окно
+            modalCloseBtn = document.querySelector('[data-close]');// крестик закрытия окна
+            
+      // Открытие и закрытие окна
+      modalTrigger.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // modal.classList.add('show');
+          // modal.classList.remove('hide');
+
+          // Вариант с toggle
+          modal.classList.toggle('show'); // переключатель убирает/добавляет класс
+
+          // убираем прокрутку
+          document.body.style.overflow = 'hidden'; // не позволяет прокручивать страницу
+        });
+      });
+
+      function closeModal() {
+        // modal.classList.add('hide');
+        // modal.classList.remove('show');
+
+        // Вариант с toggle
+        modal.classList.toggle('show'); // переключатель убирает/добавляет класс
+
+        // убираем прокрутку
+        document.body.style.overflow = ''; // браузер сам восстановит скролл
+      }
+
+      modalCloseBtn.addEventListener('click', closeModal);
+
+      //Закрытие окна при клике в другую область экрана
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+      });
+
+      // Закрытие окна при клике на 'Esc'(при открытом окне)
+      document.addEventListener('keydown', (e) => {
+        if (e.code === "Escape" && modal.classList.contains('show')) {// вызываем свойство события(e) code
+          closeModal();
+        }
+      });
+
       });
