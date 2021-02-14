@@ -1,3 +1,4 @@
+
 // Работа с табами
 // Выбираем глобальный обработчик событий
 window.addEventListener('DOMContentLoaded', () => {
@@ -176,85 +177,170 @@ window.addEventListener('DOMContentLoaded', () => {
   // Вызов окна в конце сайта
   window.addEventListener('scroll', showModalByScroll);
 
-/*
-Шаблонизировать карточки заказа и создавать их только передавая нужные аргументы с помощью классов
-*/
+  /*
+  Шаблонизировать карточки заказа и создавать их только передавая нужные аргументы с помощью классов
+  */
 
-class MenuCard {
-  constructor(src, alt, title, descr, price, parentSelector, ...classes) {
-    this.src = src;
-    this.alt = alt;
-    this.title = title;
-    this.descr = descr;
-    this.price = price;
-    this.classes = classes;// будет массив
-    this.parent = document.querySelector(parentSelector);// будет дом элемент
-    this.transfer = 2.5;// конвертация в доллары
-    this.changeToRUB();
-  }
-
-  changeToRUB() {//метод рассчета конвертации
-    this.price = this.price * this.transfer;
-  }
-
-  render() { // метод формирования верстки для changeToRUB
-    const element = document.createElement('div');
-    // Применим значение по умолчанию чтобы подставлялся нужный класс
-    if (this.classes.length === 0) {
-      this.element = 'menu__item';
-      element.classList.add(this.element);
-    } else {
-      this.classes.forEach(className => element.classList.add(className)); // обращаемся к этому 'div' и добавляем каждый класс который будет в этом массиве
+  class MenuCard {
+    constructor(src, alt, title, descr, price, parentSelector, ...classes) {
+      this.src = src;
+      this.alt = alt;
+      this.title = title;
+      this.descr = descr;
+      this.price = price;
+      this.classes = classes; // будет массив
+      this.parent = document.querySelector(parentSelector); // будет дом элемент
+      this.transfer = 2.5; // конвертация в доллары
+      this.changeToRUB();
     }
-    
-    
-    element.innerHTML = `
-      <img src=${this.src} alt=${this.alt}>
-      <h3 class="menu__item-subtitle">${this.title}</h3>
-      <div class="menu__item-descr">${this.descr}</div>
-      <div class="menu__item-divider"></div>
-      <div class="menu__item-price">
-        <div class="menu__item-cost">Цена:</div>
-        <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
-      </div>
-    `;
-    this.parent.append(element);// помещаем созданный элеменм внутрь элемента
+
+    changeToRUB() { //метод рассчета конвертации
+      this.price = this.price * this.transfer;
+    }
+
+    render() { // метод формирования верстки для changeToRUB
+      const element = document.createElement('div');
+      // Применим значение по умолчанию чтобы подставлялся нужный класс
+      if (this.classes.length === 0) {
+        this.element = 'menu__item';
+        element.classList.add(this.element);
+      } else {
+        this.classes.forEach(className => element.classList.add(className)); // обращаемся к этому 'div' и добавляем каждый класс который будет в этом массиве
+      }
+
+
+      element.innerHTML = `
+        <img src=${this.src} alt=${this.alt}>
+        <h3 class="menu__item-subtitle">${this.title}</h3>
+        <div class="menu__item-descr">${this.descr}</div>
+        <div class="menu__item-divider"></div>
+        <div class="menu__item-price">
+          <div class="menu__item-cost">Цена:</div>
+          <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
+        </div>
+      `;
+      this.parent.append(element); // помещаем созданный элеменм внутрь элемента
+    }
   }
-}
 
-// постоянный объект
-// const div = new MenuCard();
-// div.render();
+  // постоянный объект
+  // const div = new MenuCard();
+  // div.render();
 
-// создание временного объекта когда нужет один раз
-new MenuCard( // т.к. много аргументов, то разносим на строчки
-  "img/tabs/vegy.jpg",
-  "vegy",
-  'Меню "Фитнес"',
-  'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-  9,
-  '.menu .container',
-).render();
+  // создание временного объекта когда нужет один раз
+  new MenuCard( // т.к. много аргументов, то разносим на строчки
+    "img/tabs/vegy.jpg",
+    "vegy",
+    'Меню "Фитнес"',
+    'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+    9,
+    '.menu .container',
+  ).render();
 
-new MenuCard( // т.к. много аргументов, то разносим на строчки
-  "img/tabs/elite.jpg",
-  "elite",
-  'Меню “Премиум”',
-  'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-  21,
-  '.menu .container',
-  'menu__item'
-).render();
+  new MenuCard( // т.к. много аргументов, то разносим на строчки
+    "img/tabs/elite.jpg",
+    "elite",
+    'Меню “Премиум”',
+    'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+    21,
+    '.menu .container',
+    'menu__item'
+  ).render();
 
-new MenuCard( // т.к. много аргументов, то разносим на строчки
-  "img/tabs/post.jpg",
-  "post",
-  'Меню "Постное"',
-  'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-  14,
-  '.menu .container',
-  'menu__item'
-).render();
+  new MenuCard( // т.к. много аргументов, то разносим на строчки
+    "img/tabs/post.jpg",
+    "post",
+    'Меню "Постное"',
+    'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+    14,
+    '.menu .container',
+    'menu__item'
+  ).render();
 
+  // Forms отроавка данных с формы
+  const forms = document.querySelectorAll('form');
+
+  const message = {// то что будет показываться пользователю
+    loading: 'Загрузка',
+    success: 'Спасибо! Скоро мы с вами свяжемся',
+    failure: 'Что-то пошло не так...'
+  };
+
+  forms.forEach(item => {// обработчик события при отправке
+    postData(item);
+  });
+
+  // Отправка в формате FormData
+  // function postData(form) {
+  //   form.addEventListener('submit', (e) => {
+  //     e.preventDefault(); // отменяем стандартное поведение браузера
+
+  //     const statusMessage = document.createElement('div');// сюда будут помещаться ответы пользователю
+  //     statusMessage.classList.add('status');
+  //     statusMessage.textContent = message.loading;
+  //     form.append(statusMessage);// отправка месседжа на страницу
+
+  //     const request = new XMLHttpRequest(); // создаем рекуест
+  //     request.open('POST', 'server.php'); // настраиваем запрос
+
+  //     //request.setRequestHeader('content-type', 'multipart/form-data');// не нужно!!! заголовок установиться автоматически
+  //     const formData = new FormData(form);
+
+  //     request.send(formData);
+
+  //     request.addEventListener('load', () => {
+  //       if (request.status === 200) {
+  //         console.log(request.response);
+  //         statusMessage.textContent = message.success;// loading замениться на succes
+  //         form.reset(); // очистка данных формы после отправки
+  //         setTimeout(() => {
+  //           statusMessage.remove();// удаление блока сообщения
+  //         }, 2000);
+  //       } else {// обработаем негативный результат
+  //         statusMessage.textContent = message.failure;
+  //       }
+  //     });
+  //   });
+  // }
+
+  // Отправка в формате JSON
+  function postData(form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // отменяем стандартное поведение браузера
+
+      const statusMessage = document.createElement('div'); // сюда будут помещаться ответы пользователю
+      statusMessage.classList.add('status');
+      statusMessage.textContent = message.loading;
+      form.append(statusMessage); // отправка месседжа на страницу
+
+      const request = new XMLHttpRequest(); // создаем рекуест
+      request.open('POST', 'server.php'); // настраиваем запрос
+
+      request.setRequestHeader('content-type', 'application/json');
+      const formData = new FormData(form);
+
+      // FormData нужно перевести в JSON
+      const object = {};// создаем пустой объект
+      formData.forEach(function(value, key) {// делаем перебор
+        object[key] = value;// получаем объект
+      });
+
+      const json = JSON.stringify(object);// конвертируем в JSON
+
+      request.send(json); // получаем json формат
+
+      request.addEventListener('load', () => {
+        if (request.status === 200) {
+          console.log(request.response);
+          statusMessage.textContent = message.success; // loading замениться на succes
+          form.reset(); // очистка данных формы после отправки
+          setTimeout(() => {
+            statusMessage.remove(); // удаление блока сообщения
+          }, 2000);
+        } else { // обработаем негативный результат
+          statusMessage.textContent = message.failure;
+        }
+      });
+    });
+  }
 });
-
