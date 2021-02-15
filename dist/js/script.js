@@ -1,4 +1,4 @@
-
+"use ctrict";
 // Работа с табами
 // Выбираем глобальный обработчик событий
 window.addEventListener('DOMContentLoaded', () => {
@@ -114,16 +114,16 @@ window.addEventListener('DOMContentLoaded', () => {
     // Модальное окно / Modal window
 
   const modalTrigger = document.querySelectorAll('[data-modal'), // кнопки указываем в скобках так как это атрибут
-        modal = document.querySelector('.modal'), // окно
-        modalCloseBtn = document.querySelector('[data-close]');// крестик закрытия окна
+        modal = document.querySelector('.modal'); // окно
+        //modalCloseBtn = document.querySelector('[data-close]');// крестик закрытия окна(удаляем, будет формироваться динамически коммит 7)
         
   // Открытие и закрытие окна
   function openModal() {
-    // modal.classList.add('show');
-    // modal.classList.remove('hide');
+    modal.classList.add('show');
+    modal.classList.remove('hide');
 
     // Вариант с toggle
-    modal.classList.toggle('show'); // переключатель убирает/добавляет класс
+    //modal.classList.toggle('show'); // переключатель убирает/добавляет класс
 
     // убираем прокрутку
     document.body.style.overflow = 'hidden'; // не позволяет прокручивать страницу
@@ -136,21 +136,22 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   function closeModal() {
-    // modal.classList.add('hide');
-    // modal.classList.remove('show');
+    modal.classList.add('hide');
+    modal.classList.remove('show');
 
     // Вариант с toggle
-    modal.classList.toggle('show'); // переключатель убирает/добавляет класс
+    //modal.classList.toggle('show'); // переключатель убирает/добавляет класс
 
     // убираем прокрутку
     document.body.style.overflow = ''; // браузер сам восстановит скролл
   }
 
-  modalCloseBtn.addEventListener('click', closeModal);
+  //modalCloseBtn.addEventListener('click', closeModal);// удаляем (коммит 7)
 
   //Закрытие окна при клике в другую область экрана
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    if (e.target === modal || e.target.getAttribute('data-close') == "") {
+      // добавляем условие или (коммит 7)
         closeModal();
     }
   });
@@ -164,7 +165,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Вызов окна при пролистывании до конца сайта / Calling a window when scrolling to the end of the site
   // Установим время вызова
-  const modalTimerID = setTimeout(openModal, 5000);
+  const modalTimerID = setTimeout(openModal, 50000);
 
   function showModalByScroll() {
     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -202,8 +203,8 @@ window.addEventListener('DOMContentLoaded', () => {
       const element = document.createElement('div');
       // Применим значение по умолчанию чтобы подставлялся нужный класс
       if (this.classes.length === 0) {
-        this.element = 'menu__item';
-        element.classList.add(this.element);
+        this.classes = 'menu__item';
+        element.classList.add(this.classes);
       } else {
         this.classes.forEach(className => element.classList.add(className)); // обращаемся к этому 'div' и добавляем каждый класс который будет в этом массиве
       }
@@ -234,7 +235,7 @@ window.addEventListener('DOMContentLoaded', () => {
     'Меню "Фитнес"',
     'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
     9,
-    '.menu .container',
+    '.menu .container'
   ).render();
 
   new MenuCard( // т.к. много аргументов, то разносим на строчки
@@ -243,8 +244,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'Меню “Премиум”',
     'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
     21,
-    '.menu .container',
-    'menu__item'
+    '.menu .container'
+    //'menu__item'
   ).render();
 
   new MenuCard( // т.к. много аргументов, то разносим на строчки
@@ -253,15 +254,14 @@ window.addEventListener('DOMContentLoaded', () => {
     'Меню "Постное"',
     'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
     14,
-    '.menu .container',
-    'menu__item'
+    '.menu .container'
+    //'menu__item'
   ).render();
 
   // Forms отроавка данных с формы
   const forms = document.querySelectorAll('form');
-
   const message = {// то что будет показываться пользователю
-    loading: 'Загрузка',
+    loading: 'img/form/spinner.svg',
     success: 'Спасибо! Скоро мы с вами свяжемся',
     failure: 'Что-то пошло не так...'
   };
@@ -308,15 +308,18 @@ window.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', (e) => {
       e.preventDefault(); // отменяем стандартное поведение браузера
 
-      const statusMessage = document.createElement('div'); // сюда будут помещаться ответы пользователю
-      statusMessage.classList.add('status');
-      statusMessage.textContent = message.loading;
-      form.append(statusMessage); // отправка месседжа на страницу
+      let statusMessage = document.createElement('img');
+      statusMessage.src = message.loading;
+      statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+      `;
+      form.insertAdjacentElement('afterend', statusMessage);
 
       const request = new XMLHttpRequest(); // создаем рекуест
       request.open('POST', 'server.php'); // настраиваем запрос
 
-      request.setRequestHeader('content-type', 'application/json');
+      request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
       const formData = new FormData(form);
 
       // FormData нужно перевести в JSON
@@ -332,15 +335,40 @@ window.addEventListener('DOMContentLoaded', () => {
       request.addEventListener('load', () => {
         if (request.status === 200) {
           console.log(request.response);
-          statusMessage.textContent = message.success; // loading замениться на succes
-          form.reset(); // очистка данных формы после отправки
-          setTimeout(() => {
+          showThanksModal(message.success);// вызываем созданную функцию
             statusMessage.remove(); // удаление блока сообщения
-          }, 2000);
+            form.reset(); // очистка данных формы после отправки
         } else { // обработаем негативный результат
-          statusMessage.textContent = message.failure;
+          showThanksModal(message.failure);
         }
       });
     });
+  }
+
+  // Красивое оформление отпраски и создание формы ответа
+  // скрываем первое окно и показываем другое (на его основе)
+  function showThanksModal(message) {// показ окна благодарности
+    const prevModalDialog = document.querySelector('.modal__dialog');// получаем
+
+    prevModalDialog.classList.add('hide');// скрываем элемент перед показом окна
+    openModal();// открытие окна
+
+    const thanksModal = document.createElement('div');// обертка окна
+    thanksModal.classList.add('modal__dialog');// добавляем класс 
+    // формируем верстку
+    thanksModal.innerHTML = `
+      <div class="modal__content">
+        <div class="modal__close" data-close>×</div>
+        <div class="modal__title">${message}</div>
+      </div>
+    `;
+
+    document.querySelector('.modal').append(thanksModal);// получаем модальное окно и вставляем в него блок
+    setTimeout(() => {// возвращаем все на место через какое-то время
+      thanksModal.remove();// удаление через 4 с
+      prevModalDialog.classList.add('show');// показ предыдущего контента
+      prevModalDialog.classList.remove('hide');//
+      closeModal();// закрытие окна
+    }, 4000);
   }
 });
