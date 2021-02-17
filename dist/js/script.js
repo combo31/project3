@@ -270,39 +270,6 @@ window.addEventListener('DOMContentLoaded', () => {
     postData(item);
   });
 
-  // Отправка в формате FormData
-  // function postData(form) {
-  //   form.addEventListener('submit', (e) => {
-  //     e.preventDefault(); // отменяем стандартное поведение браузера
-
-  //     const statusMessage = document.createElement('div');// сюда будут помещаться ответы пользователю
-  //     statusMessage.classList.add('status');
-  //     statusMessage.textContent = message.loading;
-  //     form.append(statusMessage);// отправка месседжа на страницу
-
-  //     const request = new XMLHttpRequest(); // создаем рекуест
-  //     request.open('POST', 'server.php'); // настраиваем запрос
-
-  //     //request.setRequestHeader('content-type', 'multipart/form-data');// не нужно!!! заголовок установиться автоматически
-  //     const formData = new FormData(form);
-
-  //     request.send(formData);
-
-  //     request.addEventListener('load', () => {
-  //       if (request.status === 200) {
-  //         console.log(request.response);
-  //         statusMessage.textContent = message.success;// loading замениться на succes
-  //         form.reset(); // очистка данных формы после отправки
-  //         setTimeout(() => {
-  //           statusMessage.remove();// удаление блока сообщения
-  //         }, 2000);
-  //       } else {// обработаем негативный результат
-  //         statusMessage.textContent = message.failure;
-  //       }
-  //     });
-  //   });
-  // }
-
   // Отправка в формате JSON
   function postData(form) {
     form.addEventListener('submit', (e) => {
@@ -316,10 +283,6 @@ window.addEventListener('DOMContentLoaded', () => {
       `;
       form.insertAdjacentElement('afterend', statusMessage);
 
-      const request = new XMLHttpRequest(); // создаем рекуест
-      request.open('POST', 'server.php'); // настраиваем запрос
-
-      request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
       const formData = new FormData(form);
 
       // FormData нужно перевести в JSON
@@ -328,20 +291,27 @@ window.addEventListener('DOMContentLoaded', () => {
         object[key] = value;// получаем объект
       });
 
-      const json = JSON.stringify(object);// конвертируем в JSON
-
-      request.send(json); // получаем json формат
-
-      request.addEventListener('load', () => {
-        if (request.status === 200) {
-          console.log(request.response);
-          showThanksModal(message.success);// вызываем созданную функцию
-            statusMessage.remove(); // удаление блока сообщения
-            form.reset(); // очистка данных формы после отправки
-        } else { // обработаем негативный результат
-          showThanksModal(message.failure);
-        }
+      // Заменяем request на fetch
+      fetch('server.php', {
+        method: "POST",
+        headers: {
+          'Content-type': 'application/json' // прописываем заголовки
+        },
+        body: JSON.stringify(object)
+      })
+      .then(data => data.text())
+      .then(data => {
+        console.log(data);
+        showThanksModal(message.success);// вызываем созданную функцию
+        statusMessage.remove(); // удаление блока сообщения
+      })
+      .catch(() => {
+        showThanksModal(message.failure);
+      })
+      .finally(() => {
+        form.reset(); // очистка данных формы после отправки
       });
+      
     });
   }
 
@@ -371,4 +341,15 @@ window.addEventListener('DOMContentLoaded', () => {
       closeModal();// закрытие окна
     }, 4000);
   }
+          
+           // Fetch  API пример
+//   fetch('https://jsonplaceholder.typicode.com/posts', {
+//     method: 'POST',
+//     body: JSON.stringify({name: 'Alex'}),
+//     headers: {
+//       'Content-type': 'application/json'
+//     }
+//   })// ИЗ этой конструкции возвращается промис
+//     .then(response => response.json())// получаем какой-то объект в виде промиса
+//     .then(json => console.log(json));
 });
