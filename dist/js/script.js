@@ -234,9 +234,16 @@ window.addEventListener('DOMContentLoaded', () => {
     return await res.json(); // обработка промиса в объект
   };
 
-  getResource('http://localhost:3000/menu')// делаем запрос
-    .then(data => {// получаем объект
-      data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
+  // getResource('http://localhost:3000/menu')// делаем запрос
+  //   .then(data => {// получаем объект
+      // data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
+      //   new MenuCard(img, altimg, title, descr, price, '.menu .container').render(); // указываем куда пушим ('.menu .container')
+      // });
+  //   });
+
+  axios.get('http://localhost:3000/menu')
+    .then(data => {
+      data.data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
         new MenuCard(img, altimg, title, descr, price, '.menu .container').render(); // указываем куда пушим ('.menu .container')
       });
     });
@@ -246,14 +253,14 @@ window.addEventListener('DOMContentLoaded', () => {
   // getResource('http://localhost:3000/menu')
   //   .then(data => createCard(data));
 
-  //   function createCard(data) {
-  //     data.forEach(({img, altimg, title, descr, price}) => {
-  //       const element = document.createElement('div');
+  //   function createCard(data) {// функция получает массив
+  //     data.forEach(({img, altimg, title, descr, price}) => {// деструктуризирует на свойства
+  //       const element = document.createElement('div');// создает div
   //         price = price * 2.5;
-  //       element.classList.add('menu__item');
+  //       element.classList.add('menu__item');// присваивает новый класс
 
   //       element.innerHTML = `
-  //         <img src=${img} alt=${altimg}>
+  //         <img src=${img} alt=${altimg}>// свойства получаем с сервера
   //         <h3 class="menu__item-subtitle">${title}</h3>
   //         <div class="menu__item-descr">${descr}</div>
   //         <div class="menu__item-divider"></div>
@@ -263,7 +270,7 @@ window.addEventListener('DOMContentLoaded', () => {
   //         </div>
   //       `;
 
-  //       document.querySelector('.menu .container').append(element);
+  //       document.querySelector('.menu .container').append(element);// вставляем карточку в элемент на странице
   //     });
   //   }
 
