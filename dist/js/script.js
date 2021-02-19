@@ -369,48 +369,118 @@ window.addEventListener('DOMContentLoaded', () => {
         next = document.querySelector('.offer__slider-next'),
         slides = document.querySelectorAll('.offer__slide'),
         current = document.querySelector('#current'),
-        total = document.querySelector('#total');
+        total = document.querySelector('#total'),
+        // для второго варианта
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width;// ширина объекта
 
   let slideIndex = 1;
+              // Сложный вариант
+  let offset = 0;// отступ право/ лево
 
-  showSlides(slideIndex); // инициализируем первый слайд
+  slidesField.style.width = 100 * slides.length + '%';// уст. ширину блока
+  slidesField.style.display = 'flex';
+  slidesField.style.transition = '0.5s all';
 
-  if (slides.length < 10) {// подставляем 0 в номер слайда
-    total.textContent = `0${slides.length}`;
-  } else {
-    total.textContent = slides.length;
-  }
+  slidesWrapper.style.overflow = 'hidden';
 
-  function showSlides(n) {
-    if (n > slides.length) {//переброс в начало
+  slides.forEach(slide => {// уст. ширину каждого слайда
+    slide.style.width = width;
+  });
+
+  next.addEventListener('click', () => {// назначаем обработчик события
+    if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length - 2);
+    }
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+    if (slideIndex == slides.length) {
       slideIndex = 1;
+    } else {
+      slideIndex++;
     }
 
-    if (n < 1) {// переброс в конец
-      slideIndex = slides.length;
-    }
-
-    slides.forEach(item => item.style.display = 'none');// скрываем все слайды
-
-    slides[slideIndex - 1].style.display = 'block';// показываем первый(-0)
-
-    if (slides.length < 10) { // подставляем 0 в номер слайда
+    if (slides.length < 10) {
       current.textContent = `0${slideIndex}`;
     } else {
       current.textContent = slideIndex;
     }
-  }
-
-  function plusSlides(n) {// показ следующего слайдера
-    showSlides(slideIndex += n);// 
-  }
-
-  prev.addEventListener('click', () => {// обработчик стрелки вперед
-    plusSlides(-1);
   });
 
-  next.addEventListener('click', () => {// обработчик стрелки назад
-    plusSlides(1);
-  })
+  prev.addEventListener('click', () => { // назначаем обработчик события
+    if (offset == 0) {
+        offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+    } else {
+        offset -= +width.slice(0, width.length - 2);
+    }
+
+    slidesField.style.transform = `translateX(-${offset}px)`;
+
+
+    if (slideIndex == 1) {
+      slideIndex = slides.length;
+    } else {
+      slideIndex--;
+    }
+
+    if (slides.length < 10) {
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
+    
+  });
+      
+              // Простой вариант
+
+  // if (slides.length < 10) { // подставляем 0 в номер слайда 
+  //   total.textContent = `0${slides.length}`;
+  //   current.textContent = `0${slideIndex}`;
+  // } else {
+  //   total.textContent = slides.length;
+  //   current.textContent = slideIndex;
+  // }
+  // showSlides(slideIndex); // инициализируем первый слайд
+
+  // if (slides.length < 10) {// подставляем 0 в номер слайда
+  //   total.textContent = `0${slides.length}`;
+  // } else {
+  //   total.textContent = slides.length;
+  // }
+
+  // function showSlides(n) {
+  //   if (n > slides.length) {//переброс в начало
+  //     slideIndex = 1;
+  //   }
+
+  //   if (n < 1) {// переброс в конец
+  //     slideIndex = slides.length;
+  //   }
+
+  //   slides.forEach(item => item.style.display = 'none');// скрываем все слайды
+
+  //   slides[slideIndex - 1].style.display = 'block';// показываем первый(-0)
+
+  //   if (slides.length < 10) { // подставляем 0 в номер слайда
+  //     current.textContent = `0${slideIndex}`;
+  //   } else {
+  //     current.textContent = slideIndex;
+  //   }
+  // }
+
+  // function plusSlides(n) {// показ следующего слайдера
+  //   showSlides(slideIndex += n);// 
+  // }
+
+  // prev.addEventListener('click', () => {// обработчик стрелки вперед
+  //   plusSlides(-1);
+  // });
+
+  // next.addEventListener('click', () => {// обработчик стрелки назад
+  //   plusSlides(1);
+  // })
 
 });    
