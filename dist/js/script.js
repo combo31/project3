@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', () => {
   let tabs = document.querySelectorAll('.tabheader__item'),
     tabsContent = document.querySelectorAll('.tabcontent'),
     tabsParent = document.querySelector('.tabheader__items');
-
+    
   //скрываем все табы на странице меню
   function hideTabContent() {
     tabsContent.forEach(item => {
@@ -362,4 +362,55 @@ window.addEventListener('DOMContentLoaded', () => {
   fetch('http://localhost:3000/menu')// обращение к json-server
     .then(data => data.json())
     .then(res => console.log(res));
-});
+
+  
+    // Slider
+  const prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        slides = document.querySelectorAll('.offer__slide'),
+        current = document.querySelector('#current'),
+        total = document.querySelector('#total');
+
+  let slideIndex = 1;
+
+  showSlides(slideIndex); // инициализируем первый слайд
+
+  if (slides.length < 10) {// подставляем 0 в номер слайда
+    total.textContent = `0${slides.length}`;
+  } else {
+    total.textContent = slides.length;
+  }
+
+  function showSlides(n) {
+    if (n > slides.length) {//переброс в начало
+      slideIndex = 1;
+    }
+
+    if (n < 1) {// переброс в конец
+      slideIndex = slides.length;
+    }
+
+    slides.forEach(item => item.style.display = 'none');// скрываем все слайды
+
+    slides[slideIndex - 1].style.display = 'block';// показываем первый(-0)
+
+    if (slides.length < 10) { // подставляем 0 в номер слайда
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
+  }
+
+  function plusSlides(n) {// показ следующего слайдера
+    showSlides(slideIndex += n);// 
+  }
+
+  prev.addEventListener('click', () => {// обработчик стрелки вперед
+    plusSlides(-1);
+  });
+
+  next.addEventListener('click', () => {// обработчик стрелки назад
+    plusSlides(1);
+  })
+
+});    
