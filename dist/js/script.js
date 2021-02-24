@@ -389,13 +389,17 @@ window.addEventListener('DOMContentLoaded', function() {
               // Сложный вариант
   let offset = 0;// отступ право/ лево
 
-  if (slides.length < 10) {
-    total.textContent = `0${slides.length}`;
-    current.textContent = `0${slideIndex}`;
-  } else {
-    total.textContent = slides.length;
-    current.textContent = slideIndex;
+  function numberReplacement() {
+    if (slides.length < 10) {
+      total.textContent = `0${slides.length}`;
+      current.textContent = `0${slideIndex}`;
+    } else {
+      total.textContent = slides.length;
+      current.textContent = slideIndex;
+    }
   }
+
+  numberReplacement()
   
   slidesField.style.width = 100 * slides.length + '%';// уст. ширину блока
   slidesField.style.display = 'flex';
@@ -453,11 +457,15 @@ window.addEventListener('DOMContentLoaded', function() {
     dots.push(dot);// помещаем точку в массив dots
   }
 
+  function deliteNotDigits(str) {
+    return +str.replace(/\D/g, '');
+  }
+
   next.addEventListener('click', () => {// назначаем обработчик события
-    if (offset == (+width.slice(0, width.length - 2) * (slides.length - 1))) {
+    if (offset == deliteNotDigits(width) * (slides.length - 1)) {
       offset = 0;
     } else {
-      offset += +width.slice(0, width.length - 2);
+      offset += deliteNotDigits(width);
     }
     
     slidesField.style.transform = `translateX(-${offset}px)`;
@@ -468,11 +476,7 @@ window.addEventListener('DOMContentLoaded', function() {
       slideIndex++;
     }
 
-    if (slides.length < 10) {
-      current.textContent = `0${slideIndex}`;
-    } else {
-      current.textContent = slideIndex;
-    }
+    numberReplacement();
 
     dots.forEach(dot => dot.style.opacity = ".5"); // у каждой точки устанавливаем стили opacity = '50%'
     dots[slideIndex - 1].style.opacity = 1;// 
@@ -480,9 +484,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
   prev.addEventListener('click', () => { // назначаем обработчик события
     if (offset == 0) {
-        offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        offset = deliteNotDigits(width) * (slides.length - 1);
     } else {
-        offset -= +width.slice(0, width.length - 2);
+        offset -= deliteNotDigits(width);
     }
 
     slidesField.style.transform = `translateX(-${offset}px)`;
@@ -494,11 +498,7 @@ window.addEventListener('DOMContentLoaded', function() {
       slideIndex--;
     }
 
-    if (slides.length < 10) {
-      current.textContent = `0${slideIndex}`;
-    } else {
-      current.textContent = slideIndex;
-    }
+    numberReplacement()
     
     dots.forEach(dot => dot.style.opacity = ".5"); // у каждой точки устанавливаем стили opacity = '50%'
     dots[slideIndex - 1].style.opacity = 1; // 
@@ -509,15 +509,11 @@ window.addEventListener('DOMContentLoaded', function() {
       const slideTo = e.target.getAttribute('data-slide-to');
     // обращаемся к атрибуту data-slide-to
       slideIndex = slideTo;
-      offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+      offset = deliteNotDigits(width) * (slideTo - 1);
 
       slidesField.style.transform = `translateX(-${offset}px)`;
 
-      if (slides.length < 10) {
-        current.textContent = `0${slideIndex}`;
-      } else {
-        current.textContent = slideIndex;
-      }
+      numberReplacement()
 
       dots.forEach(dot => dot.style.opacity = ".5"); // у каждой точки устанавливаем стили opacity = '50%'
       dots[slideIndex - 1].style.opacity = 1; // 
