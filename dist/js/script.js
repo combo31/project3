@@ -1,7 +1,10 @@
-"use ctrict";
+
 // Работа с табами
 // Выбираем глобальный обработчик событий
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', function() {
+
+     // Tabs
+
   // Прописываем нужные переменные
   let tabs = document.querySelectorAll('.tabheader__item'),
     tabsContent = document.querySelectorAll('.tabcontent'),
@@ -9,6 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
     
   //скрываем все табы на странице меню
   function hideTabContent() {
+
     tabsContent.forEach(item => {
       //item.style.display = 'none';
       // В2 используем классы вместо стилей
@@ -36,7 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
   showTabContent(); // (0)номер первого слайда либо по умолчанию
 
   // Назначаем обработчик события клика(чтобы делегировать события)
-  tabsParent.addEventListener('click', (event) => {
+  tabsParent.addEventListener('click', function(event)  {
     //чтобы в последующем не писать event.target, саздаем переменную
     const target = event.target;
 
@@ -74,7 +78,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // Подставляем 0 в таймер / Substituting 0 into the timer
   function getZero(num) {
     if (num >= 0 && num < 10) {
-      return `0${num}`;
+      return '0' + num;
     } else {
       return num;
     }
@@ -82,12 +86,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Устанавливаем таймер на страницу / Setting the timer to the page
   function setClock(selector, endtime) {
+
     const timer = document.querySelector(selector),
-      days = timer.querySelector('#days'),
-      hours = timer.querySelector('#hours'),
-      minutes = timer.querySelector('#minutes'),
-      seconds = timer.querySelector('#seconds'),
-      timeInterval = setInterval(updateClock, 1000);
+          days = timer.querySelector('#days'),
+          hours = timer.querySelector('#hours'),
+          minutes = timer.querySelector('#minutes'),
+          seconds = timer.querySelector('#seconds'),
+          timeInterval = setInterval(updateClock, 1000);
 
     // Убираем начальные значения(мигание)/ Remove initial values (blinking)
     updateClock();
@@ -113,9 +118,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Модальное окно / Modal window
 
-  const modalTrigger = document.querySelectorAll('[data-modal'), // кнопки указываем в скобках так как это атрибут
+  const modalTrigger = document.querySelectorAll('[data-modal]'), // кнопки указываем в скобках так как это атрибут
+
     modal = document.querySelector('.modal'); // окно
   //modalCloseBtn = document.querySelector('[data-close]');// крестик закрытия окна(удаляем, будет формироваться динамически коммит 7)
+
+  modalTrigger.forEach(btn => {
+    btn.addEventListener('click', openModal);
+  });
 
   // Открытие и закрытие окна
   function openModal() {
@@ -131,10 +141,6 @@ window.addEventListener('DOMContentLoaded', () => {
     clearInterval(modalTimerID);
   }
 
-  modalTrigger.forEach(btn => {
-    btn.addEventListener('click', openModal);
-  });
-
   function closeModal() {
     modal.classList.add('hide');
     modal.classList.remove('show');
@@ -145,8 +151,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // убираем прокрутку
     document.body.style.overflow = ''; // браузер сам восстановит скролл
   }
-
-  //modalCloseBtn.addEventListener('click', closeModal);// удаляем (коммит 7)
 
   //Закрытие окна при клике в другую область экрана
   modal.addEventListener('click', (e) => {
@@ -165,7 +169,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Вызов окна при пролистывании до конца сайта / Calling a window when scrolling to the end of the site
   // Установим время вызова
-  const modalTimerID = setTimeout(openModal, 50000);
+  const modalTimerID = setTimeout(openModal, 500000);
 
   function showModalByScroll() {
     if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -224,29 +228,29 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const getResource = async (url) => { // передаем адрес 
-    const res = await fetch(url);
+  // const getResource = async (url) => { // передаем адрес 
+  //   const res = await fetch(url);
 
-    if (!res.ok) {// если запрос не прошел
-      throw new Error(`Could not fetch ${url}, status: ${res.status}`);// создаем объект ошибки
-    }
+  //   if (!res.ok) {// если запрос не прошел
+  //     throw new Error(`Could not fetch ${url}, status: ${res.status}`);// создаем объект ошибки
+  //   }
 
-    return await res.json(); // обработка промиса в объект
-  };
+  //   return await res.json(); // обработка промиса в объект
+  // };
 
-  // getResource('http://localhost:3000/menu')// делаем запрос
-  //   .then(data => {// получаем объект
-      // data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
-      //   new MenuCard(img, altimg, title, descr, price, '.menu .container').render(); // указываем куда пушим ('.menu .container')
-      // });
-  //   });
-
-  axios.get('http://localhost:3000/menu')
-    .then(data => {
-      data.data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
+  getResource('http://localhost:3000/menu')// делаем запрос
+    .then(data => {// получаем объект
+      data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
         new MenuCard(img, altimg, title, descr, price, '.menu .container').render(); // указываем куда пушим ('.menu .container')
       });
     });
+
+  // axios.get('http://localhost:3000/menu')
+  //   .then(data => {
+  //     data.data.forEach(({img, altimg, title, descr, price}) => {// перебираем, деструктуризируе
+  //       new MenuCard(img, altimg, title, descr, price, '.menu .container').render(); // указываем куда пушим ('.menu .container')
+  //     });
+  //   });
 
   // Второй вариант создания элементов без класса (формирование динамической верстки)
 
@@ -288,7 +292,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Отправка в формате JSON + async / await
   const postData = async (url, data) => {// передаем адрес и данные
-    const res = await fetch(url, {//await ждет окончания запроса
+    let res = await fetch(url, {//await ждет окончания запроса
       method: "POST",
         headers: {
           'Content-type': 'application/json' // прописываем заголовки
@@ -298,6 +302,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
     return await res.json();// обработка промиса
   };
+
+  async function getResource(url) {
+    let res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    }
+
+    return await res.json();
+  }
 
   function bindPostData(form) {// привязка постинга
     form.addEventListener('submit', (e) => {
@@ -359,26 +373,30 @@ window.addEventListener('DOMContentLoaded', () => {
     }, 4000);
   }
 
-  fetch('http://localhost:3000/menu')// обращение к json-server
-    .then(data => data.json())
-    .then(res => console.log(res));
-
   
     // Slider
-  const prev = document.querySelector('.offer__slider-prev'),
-        next = document.querySelector('.offer__slider-next'),
-        slides = document.querySelectorAll('.offer__slide'),
-        current = document.querySelector('#current'),
-        total = document.querySelector('#total'),
-        // для второго варианта
-        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelector('.offer__slider-inner'),
-        width = window.getComputedStyle(slidesWrapper).width;// ширина объекта
+  const slides = document.querySelectorAll('.offer__slide'),
+    slider = document.querySelector('.offer__slider'),
+    prev = document.querySelector('.offer__slider-prev'),
+    next = document.querySelector('.offer__slider-next'),
+    total = document.querySelector('#total'),
+    current = document.querySelector('#current'),
+    slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+    width = window.getComputedStyle(slidesWrapper).width,
+    slidesField = document.querySelector('.offer__slider-inner');
 
   let slideIndex = 1;
               // Сложный вариант
   let offset = 0;// отступ право/ лево
 
+  if (slides.length < 10) {
+    total.textContent = `0${slides.length}`;
+    current.textContent = `0${slideIndex}`;
+  } else {
+    total.textContent = slides.length;
+    current.textContent = slideIndex;
+  }
+  
   slidesField.style.width = 100 * slides.length + '%';// уст. ширину блока
   slidesField.style.display = 'flex';
   slidesField.style.transition = '0.5s all';
@@ -389,12 +407,59 @@ window.addEventListener('DOMContentLoaded', () => {
     slide.style.width = width;
   });
 
+  slider.style.position = 'relative';// изменяем св-во позишн слайдера
+
+  const indicators = document.createElement('ol'),// создаем обертку для точек
+        dots = []; // создаем массив для точек
+
+  indicators.classList.add('carousel-indicators');//и придаем обертке стили
+  indicators.style.cssText = `
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    margin-right: 15%;
+    margin-left: 15%;
+    list-style: none;
+  `; // Если хотите - добавьте в стили, но иногда у нас нет доступа к стилям
+  slider.append(indicators);
+
+  for (let i = 0; i < slides.length; i++) {
+    const dot = document.createElement('li');// создаем точки
+    dot.setAttribute('data-slide-to', i + 1);// аттрибут первая точка к первому слай
+    dot.style.cssText = `
+      box-sizing: content-box;
+      flex: 0 1 auto;
+      width: 30px;
+      height: 6px;
+      margin-right: 3px;
+      margin-left: 3px;
+      cursor: pointer;
+      background-color: #fff;
+      background-clip: padding-box;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      opacity: .5;
+      transition: opacity .6s ease;
+    `;
+    // добавляем класс активности точкам на js
+    if (i == 0) {
+      dot.style.opacity = 1;// первая точка активна
+    }
+    indicators.append(dot);
+    dots.push(dot);// помещаем точку в массив dots
+  }
+
   next.addEventListener('click', () => {// назначаем обработчик события
-    if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+    if (offset == (+width.slice(0, width.length - 2) * (slides.length - 1))) {
       offset = 0;
     } else {
       offset += +width.slice(0, width.length - 2);
     }
+    
     slidesField.style.transform = `translateX(-${offset}px)`;
 
     if (slideIndex == slides.length) {
@@ -408,6 +473,9 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
       current.textContent = slideIndex;
     }
+
+    dots.forEach(dot => dot.style.opacity = ".5"); // у каждой точки устанавливаем стили opacity = '50%'
+    dots[slideIndex - 1].style.opacity = 1;// 
   });
 
   prev.addEventListener('click', () => { // назначаем обработчик события
@@ -432,7 +500,32 @@ window.addEventListener('DOMContentLoaded', () => {
       current.textContent = slideIndex;
     }
     
+    dots.forEach(dot => dot.style.opacity = ".5"); // у каждой точки устанавливаем стили opacity = '50%'
+    dots[slideIndex - 1].style.opacity = 1; // 
   });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {//навешиваем обработчик на каждую точку с использованием объекта события
+      const slideTo = e.target.getAttribute('data-slide-to');
+    // обращаемся к атрибуту data-slide-to
+      slideIndex = slideTo;
+      offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+
+      slidesField.style.transform = `translateX(-${offset}px)`;
+
+      if (slides.length < 10) {
+        current.textContent = `0${slideIndex}`;
+      } else {
+        current.textContent = slideIndex;
+      }
+
+      dots.forEach(dot => dot.style.opacity = ".5"); // у каждой точки устанавливаем стили opacity = '50%'
+      dots[slideIndex - 1].style.opacity = 1; // 
+    });
+
+  });
+
+  
       
               // Простой вариант
 
